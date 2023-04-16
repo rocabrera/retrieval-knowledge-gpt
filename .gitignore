@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Remove loggings
+**/outputs
+
+data/*/datasets/*
+!data/*/datasets/.gitkeep
+
+data/*/knowledge_bases/*
+!data/*/knowledge_bases/.gitkeep
+
+**/.env
