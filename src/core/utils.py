@@ -1,5 +1,19 @@
 import os
 from pathlib import Path
+from langchain import PromptTemplate
+
+def create_prompt_template():
+
+    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+    {context}
+
+    Question: {question}
+    Answer in English:"""
+    return PromptTemplate(
+        template=prompt_template, input_variables=["context", "question"]
+    )
+
 
 def load_env():
 
@@ -26,16 +40,16 @@ def create_folder_structure(folder_path:str, experiment_name: str):
 
     dataset_folder = experiment_folder / "datasets"
     knowledge_bases_folder = experiment_folder / "knowledge_bases"
-    questions_folder = experiment_folder / "questions"
+    results_folder = experiment_folder / "results"
 
     experiment_folder.mkdir(parents=True, exist_ok=True)
     dataset_folder.mkdir(parents=True, exist_ok=True)
     knowledge_bases_folder.mkdir(parents=True, exist_ok=True)
-    questions_folder.mkdir(parents=True, exist_ok=True)
+    results_folder.mkdir(parents=True, exist_ok=True)
 
     (dataset_folder / ".gitkeep").touch(exist_ok = True)
     (knowledge_bases_folder / ".gitkeep").touch(exist_ok = True)
-    (questions_folder / ".gitkeep").touch(exist_ok = True)
+    (results_folder / ".gitkeep").touch(exist_ok = True)
 
     return experiment_folder
 
