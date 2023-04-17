@@ -8,8 +8,8 @@ model:
     repo_id: "google/flan-t5-xl"
 
 experiment:
-  name: "meditation"
-  dataset: "meditation_book.txt"
+  name: "hemophilia9"
+  dataset: "hemophilia9.txt"
 
 folders:
   data: "${hydra:runtime.cwd}/data"
