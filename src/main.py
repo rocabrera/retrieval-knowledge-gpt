@@ -54,14 +54,12 @@ def main(cfg) -> None:
 
     llm = get_llm(model_name=predictor.name, model_id=predictor.id)
 
-    for question in tqdm(questions[5:6]):
+    for question in tqdm(questions):
 
         try:
 
             llm_retrieval_chain = get_retrieval_chain(llm=llm, vectorstore_folder=vectorstore_folder)
             retrieval_response:dict = llm_retrieval_chain({"query": question})
-            print(retrieval_response.keys())
-            print(retrieval_response)
 
             llm_chain = get_chain(llm=llm)
             normal_response:str = llm_chain.predict(question=question, context="")
