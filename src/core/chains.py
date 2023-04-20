@@ -1,28 +1,33 @@
 from pathlib import Path
 from langchain import HuggingFaceHub
+from langchain.llms import OpenAI
 from langchain.chains import RetrievalQA, LLMChain
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 from core.utils import create_prompt_template
 
-def get_llm(model:str):
+def get_llm(model_name:str, model_id:str):
 
-    llm = HuggingFaceHub(
-        repo_id="google/flan-t5-xl",
-        model_kwargs={"temperature":1e-10}
-    )
-    
-    return llm
+    if model_name == "flan_t5_xl":
+        return HuggingFaceHub(
+            repo_id=model_id,
+            model_kwargs={"temperature":1e-10}
+        )
+    elif model_name == "gpt3.5_turbo":
+        return OpenAI(model_name=model_id,temperature=0)
+
+    raise Exception(f"Invalid model selected.")
 
 
-def get_retrieval_chain(vectorstore_folder:Path):
+
+def get_retrieval_chain(llm, vectorstore_folder:Path):
 
     embedding = OpenAIEmbeddings()
     vectordb = Chroma(persist_directory=str(vectorstore_folder), embedding_function=embedding)
     
     chain_type_kwargs = {"prompt": create_prompt_template()}
     llm_retrieval_chain = RetrievalQA.from_chain_type(
-        llm=get_llm("dummy"), 
+        llm=llm, 
         chain_type="stuff", 
         retriever=vectordb.as_retriever(), 
         return_source_documents=True,
@@ -32,12 +37,12 @@ def get_retrieval_chain(vectorstore_folder:Path):
     return llm_retrieval_chain
 
 
-def get_chain():
+def get_chain(llm):
 
 
     llm_chain = LLMChain(
         prompt=create_prompt_template(),
-        llm=get_llm("dummy")
+        llm=llm
     )
 
     return llm_chain

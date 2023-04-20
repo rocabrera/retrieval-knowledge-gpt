@@ -131,10 +131,10 @@ dmypy.json
 # Remove loggings
 **/outputs
 
-data/*/datasets/*
-!data/*/datasets/.gitkeep
+experiments/*/datasets/*
+!experiments/*/datasets/.gitkeep
 
-data/*/knowledge_bases/*
-!data/*/knowledge_bases/.gitkeep
+experiments/*/knowledge_bases/*
+!experiments/*/knowledge_bases/.gitkeep
 
 **/.env
