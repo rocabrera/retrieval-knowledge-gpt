@@ -19,6 +19,13 @@ Steps:
     - Name: ```flan_t5_xl```
 
 
+# Sugestões
+ 
+Ver na docs do OpenAI:
+- Max de tokens PROMPT -> 4096.
+- Max de tokens (generate).
+- Olhar temperatura.
+
 
 # TODO List 
 

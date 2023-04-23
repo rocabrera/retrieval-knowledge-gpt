@@ -98,10 +98,14 @@ def save_result(
     knowledgebase_data:str, 
     embedding_model:str,
     experiment_folder:Path, 
-    response: dict):
+    response: dict,
+    predictor_params:dict
+    ):
 
-    result_path = experiment_folder / "results" / "_".join([model_name, str(Path(knowledgebase_data).stem), embedding_model, "results.csv"])
+    predictor_params_text = "_".join([f"{key}_{value}" for key,value in predictor_params.items()])
+    result_path = experiment_folder / "results" / "_".join([model_name, str(Path(knowledgebase_data).stem), embedding_model, predictor_params_text, "results.csv"])
     
+
     # TODO essa parte ta estranha... deveria estar aqui? 
     response["model_name"] = model_name
     response["knowledgebase_data"] = knowledgebase_data

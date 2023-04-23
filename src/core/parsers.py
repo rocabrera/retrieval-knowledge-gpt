@@ -2,11 +2,11 @@ import pandas as pd
 from pathlib import Path
 
 def create_qa_result_iteration(retrieval_response: dict, normal_response:str):
-    document = retrieval_response["source_documents"][0]
-    page_content = (document.page_content)
-    source = document.metadata["source"]
-    retrieval_response["context"] = page_content
-    retrieval_response["source"] = source
+    source_documents = retrieval_response["source_documents"]
+    page_contents = [document.page_content for document in source_documents]
+    sources = [document.metadata["source"] for document in source_documents]
+    retrieval_response["contexts"] = page_contents
+    retrieval_response["sources"] = sources
     _ = retrieval_response.pop("source_documents")
     retrieval_response["question"] = retrieval_response.pop("query")
     retrieval_response["with_retrieval_answer"] = retrieval_response.pop("result")

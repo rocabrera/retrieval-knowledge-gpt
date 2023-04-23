@@ -1,6 +1,7 @@
 import time
 import hydra
 import logging
+from itertools import chain
 from pathlib import Path
 from core.chains import get_retrieval_chain, get_chain, get_llm
 from core.knowledge_base_creator import create_knowledge_base
@@ -14,7 +15,7 @@ from core.utils import (
 )
 from tqdm import tqdm
 
-configuration_file = "gpt-3.5-turbo_config.yaml"
+configuration_file = "text-davinci-003_config.yaml"
 load_env()  # loads OPENAI & HUGGINGFACE environment variables keys 
 
 log = logging.getLogger(__name__)
@@ -27,6 +28,12 @@ def main(cfg) -> None:
     experiment: dict = cfg.experiment
     predictor: dict = cfg.predictor
     knowledgebase: dict = cfg.knowledgebase
+
+    predictor_params = {
+        key: value 
+        for elem in predictor.config
+        for key, value in elem.items()        
+    }
 
     experiment_folder: Path = create_folder_structure(
         folder_path=folders.data, 
@@ -52,9 +59,9 @@ def main(cfg) -> None:
         questions_dataset= experiment.questions
     )
 
-    llm = get_llm(model_name=predictor.name, model_id=predictor.id)
+    llm = get_llm(model_name=predictor.name, model_id=predictor.id, predictor_params=predictor_params)
 
-    for question in tqdm(questions):
+    for question in tqdm(questions[5:7]):
 
         try:
 
@@ -69,7 +76,7 @@ def main(cfg) -> None:
                 normal_response=normal_response
             )
 
-        except:
+        except Exception as e:
             
             formatted_response = {
                 "question": question,
@@ -81,6 +88,7 @@ def main(cfg) -> None:
                 "knowledgebase_data": "",
                 "embedding_model": ""
             }
+            print(e)
 
         finally:
             save_result(
@@ -88,7 +96,8 @@ def main(cfg) -> None:
                 knowledgebase_data = knowledgebase.data,
                 embedding_model = knowledgebase.embedding.name,
                 experiment_folder = experiment_folder,
-                response = formatted_response
+                response = formatted_response,
+                predictor_params=predictor_params
             )
             time.sleep(25)
 

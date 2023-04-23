@@ -6,15 +6,17 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 from core.utils import create_prompt_template
 
-def get_llm(model_name:str, model_id:str):
+def get_llm(model_name:str, model_id:str, predictor_params:dict):
 
     if model_name == "flan_t5_xl":
         return HuggingFaceHub(
             repo_id=model_id,
             model_kwargs={"temperature":1e-10}
         )
-    elif model_name == "gpt3.5_turbo":
-        return OpenAI(model_name=model_id,temperature=0)
+    elif model_name == "gpt3.5_turbo" or model_name == "text_davinci_003":
+        return OpenAI(model_name=model_id, model_kwargs=predictor_params)
+
+    
 
     raise Exception(f"Invalid model selected.")
 
