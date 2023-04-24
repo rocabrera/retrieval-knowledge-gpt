@@ -39,7 +39,7 @@ def create_knowledge_base(embedding_model: str, dataset_path: Path) -> Path:
     # Load Data to vectorstore
     embeddings = OpenAIEmbeddings()
     # Trocar Chroma por FAISS
-    vectordb = Chroma.from_documents(documents, embeddings, persist_directory = str(vectorstore_folder))
+    _ = Chroma.from_documents(documents, embeddings, persist_directory = str(vectorstore_folder))
     # DO I NEED THIS?
     # vectordb.persist()
     
