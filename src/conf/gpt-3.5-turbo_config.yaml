@@ -12,8 +12,8 @@ predictor:
   name: "gpt3.5_turbo"
   id: "gpt-3.5-turbo"  # works as a connection string to a repository
   config:
-    - temperature: 0.1
-    - max_tokens: 2000
+    - temperature: 0
+    - max_tokens: 1024
 
 
 knowledgebase:

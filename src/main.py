@@ -1,7 +1,6 @@
 import time
 import hydra
 import logging
-from itertools import chain
 from pathlib import Path
 from core.chains import get_retrieval_chain, get_chain, get_llm
 from core.knowledge_base_creator import create_knowledge_base
@@ -15,7 +14,7 @@ from core.utils import (
 )
 from tqdm import tqdm
 
-configuration_file = "text-davinci-003_config.yaml"
+configuration_file = "gpt-3.5-turbo_config.yaml"
 load_env()  # loads OPENAI & HUGGINGFACE environment variables keys 
 
 log = logging.getLogger(__name__)
@@ -61,7 +60,7 @@ def main(cfg) -> None:
 
     llm = get_llm(model_name=predictor.name, model_id=predictor.id, predictor_params=predictor_params)
 
-    for question in tqdm(questions[5:7]):
+    for question in tqdm(questions):
 
         try:
 
@@ -99,7 +98,7 @@ def main(cfg) -> None:
                 response = formatted_response,
                 predictor_params=predictor_params
             )
-            time.sleep(25)
+            time.sleep(20)
 
 
 if __name__ == "__main__":

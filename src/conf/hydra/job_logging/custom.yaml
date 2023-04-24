@@ -7,14 +7,14 @@ handlers:
     class: logging.FileHandler
     filename: "${hydra:runtime.cwd}/outputs/${now:%Y-%m-%d}/main.log"
     formatter: simple
-    level: INFO
+    level: ERROR
   console:
     class: logging.StreamHandler
     stream: ext://sys.stdout
     formatter: simple
-    level: INFO
+    level: ERROR
 root:
-  level: INFO
+  level: ERROR
   handlers: [file, console]
 
 disable_existing_loggers: false
