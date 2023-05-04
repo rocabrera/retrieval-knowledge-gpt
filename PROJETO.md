@@ -6,7 +6,7 @@ Esses modelos normalmente são pagos e não sabemos se podemos confiar nas respo
 
 Entretanto muitas vezes não precisamos de um modelo tão robusto para diversos tipos de perguntas. As vezes um modelo que tem bom desempenho no meu conjunto de dados ja é suficiente. Antigamente isso era feito por meio de ```finetunning```, mas hoje em dia com a chegada de LLMs se viu necessário o uso de outras técnicas, uma vez que esses modelos normalmente são muito grandes para serem executados em somente uma máquina. Em 2020, Patrick Lewis e sua equipe proporam uma técnica chamada ```Knowledge Retrieval``` que iremos explorar nesse trabalho com modelos atuais para tentar entender possíveis aplicações e limitações.
 
-https://arxiv.org/abs/2005.11401
+Ref: https://arxiv.org/abs/2005.11401
 
 # **Objetivos**
 
