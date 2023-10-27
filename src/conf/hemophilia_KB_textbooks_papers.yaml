@@ -9,19 +9,22 @@ experiment:
 
 # LLM used to make a question
 predictor:
-  name: "flan_t5_xl"
-  id: "google/flan-t5-xl"  # works as a connection string to a repository
-  config: "" # TODO 
+  name: "gpt3.5_turbo"
+  id: "gpt-3.5-turbo"  # works as a connection string to a repository
+  config:
+    - temperature: 0
+    - max_tokens: 1024
+
 
 knowledgebase:
-  data: "full_abstracts.txt"
+  data: "hemophilia_KB_textbooks_papers.csv"
   embedding:
     name: "chroma"
     config: "" # TODO
 
 
 defaults:
-  - override hydra/job_logging: custom
+  # - override hydra/job_logging: custom
   - _self_
 
 hydra:

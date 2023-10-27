@@ -9,21 +9,22 @@ experiment:
 
 # LLM used to make a question
 predictor:
-  name: "text_davinci_003"
-  id: "text-davinci-003"  # works as a connection string to a repository
+  name: "gpt3.5_turbo"
+  id: "gpt-3.5-turbo"  # works as a connection string to a repository
   config:
-    - temperature: 0.1
-    - max_tokens: 2000
+    - temperature: 0
+    - max_tokens: 1024
+
 
 knowledgebase:
-  data: "abstracts"
+  data: "new_paragraph_KB_hemophilia_October_2023.csv"
   embedding:
     name: "chroma"
     config: "" # TODO
 
 
 defaults:
-  - override hydra/job_logging: custom
+  # - override hydra/job_logging: custom
   - _self_
 
 hydra:

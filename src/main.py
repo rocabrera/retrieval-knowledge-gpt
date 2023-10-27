@@ -2,7 +2,7 @@ import time
 import hydra
 import logging
 from pathlib import Path
-from core.chains import get_retrieval_chain, get_chain, get_llm
+from core.chains import get_chain, get_llm, retrieval_predict
 from core.knowledge_base_creator import create_knowledge_base
 from core.parsers import create_qa_result_iteration
 from core.utils import (
@@ -12,13 +12,15 @@ from core.utils import (
     read_questions,
     save_result
 )
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
 from tqdm import tqdm
 
-configuration_file = "gpt-3.5-turbo_config.yaml"
+configuration_file = "new_paragraph_KB_hemophilia_October_2023.yaml"
 load_env()  # loads OPENAI & HUGGINGFACE environment variables keys 
 
 log = logging.getLogger(__name__)
-logging.getLogger('langchain').setLevel(logging.ERROR)
+# logging.getLogger('langchain').setLevel(logging.ERROR)
 
 @hydra.main(config_path="conf", config_name=configuration_file, version_base=None)
 def main(cfg) -> None:
@@ -52,6 +54,7 @@ def main(cfg) -> None:
     )
     log.info("VectorStore Folder:")
     log.info(vectorstore_folder)
+    vectordb = Chroma(persist_directory=str(vectorstore_folder), embedding_function=OpenAIEmbeddings())
 
     questions = read_questions(
         experiment_folder = experiment_folder, 
@@ -63,12 +66,15 @@ def main(cfg) -> None:
     for question in tqdm(questions):
 
         try:
-
-            llm_retrieval_chain = get_retrieval_chain(llm=llm, vectorstore_folder=vectorstore_folder)
-            retrieval_response:dict = llm_retrieval_chain({"query": question})
-
             llm_chain = get_chain(llm=llm)
-            normal_response:str = llm_chain.predict(question=question, context="")
+            normal_response:str = llm_chain.predict(question=question)
+
+            #llm_retrieval_chain = get_retrieval_chain(llm=llm, vectorstore_folder=vectorstore_folder)
+            #retrieval_response:dict = llm_retrieval_chain({"query": question})
+            retrieval_response:dict = retrieval_predict(
+                question=question, 
+                vectordb=vectordb
+            )
 
             formatted_response:dict = create_qa_result_iteration(
                 retrieval_response=retrieval_response,
@@ -80,6 +86,7 @@ def main(cfg) -> None:
             formatted_response = {
                 "question": question,
                 "with_retrieval_answer": "",
+                "pre_llm_answer": "",
                 "without_retrieval_answer": "",
                 "context": "",
                 "source": "",

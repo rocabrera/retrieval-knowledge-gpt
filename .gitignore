@@ -138,3 +138,5 @@ experiments/*/knowledge_bases/*
 !experiments/*/knowledge_bases/.gitkeep
 
 **/.env
+
+**/.DS_STORE

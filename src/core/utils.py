@@ -5,18 +5,49 @@ from langchain import PromptTemplate
 import pandas as pd
 
 
-def create_prompt_template() -> PromptTemplate:
+def create_pre_prompt_template(question) -> PromptTemplate:
 
-    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    pre_prompt = f"""
+    From now on, act as a hemophilia expert, with experience in clinical practice and molecular biology.
+    Answer the question below concisely and objectively. Your answer should be a single paragraph, with between 150-300 words.
+    The audience are hemophilia researchers very familiar with the topic.
+    
+    {question}
+    """
+    
+    return pre_prompt
 
+def create_main_prompt_template(question, context) -> PromptTemplate:
+
+    main_prompt = f"""
+    From now on, act as a hemophilia expert, with experience in clinical practice and molecular biology.
+    Answer the question below using the context given between triple # as the basis to compose your answer. Your answer should have 500 words or more.
+    
+    The tone should be professional, serious and friendly. The audience are medical workers and molecular biology researchers somewhat familiar with hemophilia. However, explain clearly any terms not known to people outside hemophilia research.
+    
+    ###
     {context}
+    ###
 
-    Question: {question}
-    Answer in English:"""
+    {question}
+    """
+    
+    return main_prompt
+
+def create_main_prompt_without_context_template() -> PromptTemplate:
+
+    main_prompt = """
+    From now on, act as a hemophilia expert, with experience in clinical practice and molecular biology. 
+    Your answer should have 500 words or more.
+    
+    The tone should be professional, serious and friendly. The audience are medical workers and molecular biology researchers somewhat familiar with hemophilia. However, explain clearly any terms not known to people outside hemophilia research.
+    
+    {question}
+    """
+    
     return PromptTemplate(
-        template=prompt_template, input_variables=["context", "question"]
+        template=main_prompt, input_variables=["question"]
     )
-
 
 def load_env():
 
