@@ -6,7 +6,10 @@ from langchain.docstore.document import Document
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 import pandas as pd
+import numpy as np
+
 from tqdm import tqdm
+
 
 
 
@@ -42,7 +45,7 @@ def create_knowledge_base(embedding_model: str, dataset_path: Path) -> Path:
         str(dataset_path), 
         sep="\t", 
         header=None
-    )
+    ).drop_duplicates(subset=[0]) # remove same text lines
 
     records = df.to_dict(orient="records")
     documents = [
@@ -58,9 +61,11 @@ def create_knowledge_base(embedding_model: str, dataset_path: Path) -> Path:
     # Load Data to vectorstore
     embeddings = OpenAIEmbeddings()
     # Trocar Chroma por FAISS
-    nbatches = int(len(documents)/100)
-    batches_documents = [documents[i*nbatches: nbatches*(i+1)] for i in range(nbatches)]
+    # nbatches = int(len(documents)/100)
+    # batches_documents = [documents[i*nbatches: nbatches*(i+1)] for i in range(nbatches)]  
+    batches_documents = np.array_split(documents, 50)
     for batches_document in tqdm(batches_documents):
+        _ = Chroma.from_documents([Document(page_content="test", metadata={"source": "test"})], embeddings, persist_directory = str(vectorstore_folder))
         _ = Chroma.from_documents(batches_document, embeddings, persist_directory = str(vectorstore_folder))
         time.sleep(10)
     # DO I NEED THIS?
